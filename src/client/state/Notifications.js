@@ -275,7 +275,7 @@ class Notifications extends EventEmitter {
           body: body.plain,
           icon,
           tag: mEvent.getId(),
-          data: (room.roomId, mEvent.getId()),
+          data: [room.roomId, mEvent.getId()],
           silent: settings.isNotificationSounds,
         });
       });
