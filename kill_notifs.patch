@@ -1,0 +1,72 @@
+Subject: [PATCH] kill notifs
+---
+Index: src/client/state/Notifications.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/client/state/Notifications.js b/src/client/state/Notifications.js
+--- a/src/client/state/Notifications.js	(revision b6157707dbb5064f114bb41e6373cdb1c21189e6)
++++ b/src/client/state/Notifications.js	(revision deb1d98eccd59588d50ea9f3dc547f025eb72246)
+@@ -51,7 +51,9 @@
+     this._listenEvents();
+ 
+     // Ask for permission by default after loading
+-    window.Notification?.requestPermission();
++    navigator.serviceWorker.register('sw.js');
++    Notification.requestPermission(function(result) {
++    });
+   }
+ 
+   async _initNoti() {
+@@ -268,25 +270,21 @@
+         body = plain(content.body, state);
+       }
+ 
+-      const noti = new window.Notification(title, {
+-        body: body.plain,
+-        icon,
+-        tag: mEvent.getId(),
+-        silent: settings.isNotificationSounds,
++      navigator.serviceWorker.ready.then(function(registration) {
++        registration.showNotification(title, {
++          body: body.plain,
++          icon,
++          tag: mEvent.getId(),
++          data: (room.roomId, mEvent.getId()),
++          silent: settings.isNotificationSounds,
++        });
+       });
+-      if (settings.isNotificationSounds) {
+-        noti.onshow = () => this._playNotiSound();
+-      }
+-      noti.onclick = () => selectRoom(room.roomId, mEvent.getId());
+-
+       this.eventIdToPopupNoti.set(mEvent.getId(), noti);
+       if (this.roomIdToPopupNotis.has(room.roomId)) {
+         this.roomIdToPopupNotis.get(room.roomId).push(noti);
+       } else {
+         this.roomIdToPopupNotis.set(room.roomId, [noti]);
+       }
+-    } else {
+-      this._playNotiSound();
+     }
+   }
+ 
+Index: src/client/state/sw.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/client/state/sw.js b/src/client/state/sw.js
+new file mode 100644
+--- /dev/null	(revision deb1d98eccd59588d50ea9f3dc547f025eb72246)
++++ b/src/client/state/sw.js	(revision deb1d98eccd59588d50ea9f3dc547f025eb72246)
+@@ -0,0 +1,6 @@
++import { selectRoom } from '../action/navigation';
++self.addEventListener('notificationclick', function(event) {
++    [roomId, mEventId] = event.notification.data
++    event.notification.close(); // Android needs explicit close.
++    selectRoom(roomId, mEventId)
++});
+\ No newline at end of file
