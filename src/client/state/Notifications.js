@@ -51,7 +51,9 @@ class Notifications extends EventEmitter {
     this._listenEvents();
 
     // Ask for permission by default after loading
-    window.Notification?.requestPermission();
+    navigator.serviceWorker.register('sw.js');
+    Notification.requestPermission(function(result) {
+    });
   }
 
   async _initNoti() {
@@ -268,25 +270,21 @@ class Notifications extends EventEmitter {
         body = plain(content.body, state);
       }
 
-      const noti = new window.Notification(title, {
-        body: body.plain,
-        icon,
-        tag: mEvent.getId(),
-        silent: settings.isNotificationSounds,
+      navigator.serviceWorker.ready.then(function(registration) {
+        registration.showNotification(title, {
+          body: body.plain,
+          icon,
+          tag: mEvent.getId(),
+          data: (room.roomId, mEvent.getId()),
+          silent: settings.isNotificationSounds,
+        });
       });
-      if (settings.isNotificationSounds) {
-        noti.onshow = () => this._playNotiSound();
-      }
-      noti.onclick = () => selectRoom(room.roomId, mEvent.getId());
-
       this.eventIdToPopupNoti.set(mEvent.getId(), noti);
       if (this.roomIdToPopupNotis.has(room.roomId)) {
         this.roomIdToPopupNotis.get(room.roomId).push(noti);
       } else {
         this.roomIdToPopupNotis.set(room.roomId, [noti]);
       }
-    } else {
-      this._playNotiSound();
     }
   }
 
