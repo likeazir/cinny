@@ -19,6 +19,7 @@
   "author": "Ajay Bura",
   "license": "AGPL-3.0-only",
   "dependencies": {
+    "firebase": "10.12.2",
     "@fontsource/inter": "4.5.14",
     "@khanacademy/simple-markdown": "0.8.6",
     "@matrix-org/olm": "3.2.14",

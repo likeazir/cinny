@@ -1,7 +1,6 @@
 import EventEmitter from 'events';
 import renderAvatar from '../../app/atoms/avatar/render';
 import { cssColorMXID } from '../../util/colorMXID';
-import { selectRoom } from '../action/navigation';
 import cons from './cons';
 import navigation from './navigation';
 import settings from './settings';
@@ -47,16 +46,37 @@ class Notifications extends EventEmitter {
     this.roomIdToPopupNotis = new Map();
     this.eventIdToPopupNoti = new Map();
 
-    // this._initNoti();
-    this._listenEvents();
-
-    // Ask for permission by default after loading
     navigator.serviceWorker.register('sw.js');
     Notification.requestPermission(function(result) {
     });
+    this._initNoti().then();
+    // this._listenEvents();
+    // Ask for permission by default after loading
   }
 
   async _initNoti() {
+    const data = {
+      format: 'event_id_only',
+      url: "https://meow.academy/_matrix/push/v1/notify",
+      lang: "de",
+      locale: 'unknown',
+      client_version: "0.42",
+    };
+    const firebaseToken = await navigation.messaging().getToken();
+    const pusher = {
+      append: false,
+      app_display_name: "beep",
+      app_id: "cinny",
+      data: data,
+      device_display_name: 'desktopOS',
+      kind: 'http',
+      lang: "de",
+      profile_tag: 'desktopOS',
+      pushkey: firebaseToken,
+    };
+    navigation.matrixClient.setPusher(pusher).catch(_error => null);
+
+    return
     this.initialized = false;
     this.roomIdToNoti = new Map();
 

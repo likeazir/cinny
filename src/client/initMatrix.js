@@ -1,14 +1,16 @@
 import EventEmitter from 'events';
 import * as sdk from 'matrix-js-sdk';
 import Olm from '@matrix-org/olm';
+import {initializeApp} from 'firebase/app';
+import {getAnalytics} from "firebase/analytics";
+import { getMessaging } from "firebase/messaging";
 // import { logger } from 'matrix-js-sdk/lib/logger';
-
-import { secret } from './state/auth';
+import {secret} from './state/auth';
 import RoomList from './state/RoomList';
 import AccountData from './state/AccountData';
 import RoomsInput from './state/RoomsInput';
 import Notifications from './state/Notifications';
-import { cryptoCallbacks } from './state/secretStorageKeys';
+import {cryptoCallbacks} from './state/secretStorageKeys';
 import navigation from './state/navigation';
 
 global.Olm = Olm;
@@ -18,11 +20,23 @@ global.Olm = Olm;
 class InitMatrix extends EventEmitter {
   constructor() {
     super();
-
     navigation.initMatrix = this;
   }
 
   async init() {
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPjKH9BHta9jFcWkO2U9Ylv3-GjQlS3vE",
+      authDomain: "cinny-a29d3.firebaseapp.com",
+      projectId: "cinny-a29d3",
+      storageBucket: "cinny-a29d3.appspot.com",
+      messagingSenderId: "592847498257",
+      appId: "1:592847498257:web:7c3e7a8b949546ea4955b0",
+      measurementId: "G-B5T26BNBYB"
+    };
+    const app = initializeApp(firebaseConfig);
+    navigation.firebase = app
+    navigation.analytics = getAnalytics(app)
+    navigation.messaging = getMessaging(app);
     if (this.matrixClient) {
       console.warn('Client is already initialized!')
       return;
@@ -56,6 +70,7 @@ class InitMatrix extends EventEmitter {
     });
 
     await this.matrixClient.initCrypto();
+
 
     await this.matrixClient.startClient({
       lazyLoadMembers: true,
@@ -132,6 +147,6 @@ class InitMatrix extends EventEmitter {
   }
 }
 
-const initMatrix = new InitMatrix();
 
+const initMatrix = new InitMatrix();
 export default initMatrix;
