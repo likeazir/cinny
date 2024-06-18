@@ -62,7 +62,7 @@ class Notifications extends EventEmitter {
       locale: 'unknown',
       client_version: "0.42",
     };
-    const firebaseToken = await navigation.messaging().getToken();
+    const firebaseToken = await navigation.messaging.getToken();
     const pusher = {
       append: false,
       app_display_name: "beep",
