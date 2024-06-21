@@ -5,11 +5,13 @@ import cons from './cons';
 import navigation from './navigation';
 import settings from './settings';
 import { setFavicon } from '../../util/common';
-
+import {getMessaging, getToken, onMessage} from "firebase/messaging";
 import LogoSVG from '../../../public/res/svg/cinny.svg';
 import LogoUnreadSVG from '../../../public/res/svg/cinny-unread.svg';
 import LogoHighlightSVG from '../../../public/res/svg/cinny-highlight.svg';
 import { html, plain } from '../../util/markdown';
+import {initializeApp} from "firebase/app";
+import { register } from "register-service-worker";
 
 function isNotifEvent(mEvent) {
   const eType = mEvent.getType();
@@ -41,41 +43,46 @@ class Notifications extends EventEmitter {
     this.favicon = LogoSVG;
     this.matrixClient = roomList.matrixClient;
     this.roomList = roomList;
-
     this.roomIdToNoti = new Map();
     this.roomIdToPopupNotis = new Map();
     this.eventIdToPopupNoti = new Map();
 
-    navigator.serviceWorker.register('sw.js');
-    Notification.requestPermission(function(result) {
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPjKH9BHta9jFcWkO2U9Ylv3-GjQlS3vE",
+      authDomain: "cinny-a29d3.firebaseapp.com",
+      projectId: "cinny-a29d3",
+      storageBucket: "cinny-a29d3.appspot.com",
+      messagingSenderId: "592847498257",
+      appId: "1:592847498257:web:7c3e7a8b949546ea4955b0",
+      measurementId: "G-B5T26BNBYB"
+    };
+    const app = initializeApp(firebaseConfig)
+    const messaging = getMessaging(app)
+    console.log('Requesting permission...');
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+      }
     });
+    navigator.serviceWorker.register("/src/firebase-sw.js").then(
+        (sw) => getToken(messaging, {
+          vapidKey: 'BM6uvdBPMiTPEBmqek0XzEIFuEr6vsmm4klO61_pVctOgnIhv1HbFYLNaQEg7RplS0N0Bu6kaQ4pogF32QpR4F0',
+          serviceWorkerRegistration: sw}).then(
+            () => onMessage(messaging, (payload) => {
+              console.log('Message received. ', payload);
+              // ...
+            })
+        )
+    )
+    console.log("awawawa")
+
+
     this._initNoti().then();
     // this._listenEvents();
     // Ask for permission by default after loading
   }
 
   async _initNoti() {
-    const data = {
-      format: 'event_id_only',
-      url: "https://meow.academy/_matrix/push/v1/notify",
-      lang: "de",
-      locale: 'unknown',
-      client_version: "0.42",
-    };
-    const firebaseToken = await navigation.messaging.getToken();
-    const pusher = {
-      append: false,
-      app_display_name: "beep",
-      app_id: "cinny",
-      data: data,
-      device_display_name: 'desktopOS',
-      kind: 'http',
-      lang: "de",
-      profile_tag: 'desktopOS',
-      pushkey: firebaseToken,
-    };
-    navigation.matrixClient.setPusher(pusher).catch(_error => null);
-
     return
     this.initialized = false;
     this.roomIdToNoti = new Map();

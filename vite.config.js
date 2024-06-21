@@ -6,6 +6,7 @@ import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 import inject from '@rollup/plugin-inject';
 import { svgLoader } from './viteSvgLoader';
+import { VitePWA } from 'vite-plugin-pwa'
 
 const copyFiles = {
   targets: [
@@ -45,6 +46,23 @@ export default defineConfig({
     host: true,
   },
   plugins: [
+    VitePWA({
+      base: '/',
+      injectManifest: {
+        minify: false,
+        globPatterns: ['**/*'],
+        rollupFormat: 'iife',
+      },
+      injectRegister: null,
+      strategies: 'injectManifest',
+      filename: "firebase-sw.js",
+      registerType: 'autoUpdate',
+      srcDir: './src',
+      workbox: {
+        sourcemap: true
+      },
+      bundle: true
+    }),
     viteStaticCopy(copyFiles),
     vanillaExtractPlugin(),
     svgLoader(),
