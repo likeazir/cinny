@@ -88,7 +88,6 @@ class Notifications extends EventEmitter {
   }
 
   async _initNoti() {
-    return
     this.initialized = false;
     this.roomIdToNoti = new Map();
 
@@ -301,12 +300,26 @@ class Notifications extends EventEmitter {
       } else {
         body = plain(content.body, state);
       }
+
+      const noti = new window.Notification(title, {
+        body: body.plain,
+        icon,
+        tag: mEvent.getId(),
+        silent: settings.isNotificationSounds,
+      });
+      if (settings.isNotificationSounds) {
+        noti.onshow = () => this._playNotiSound();
+      }
+      noti.onclick = () => selectRoom(room.roomId, mEvent.getId());
+
       this.eventIdToPopupNoti.set(mEvent.getId(), noti);
       if (this.roomIdToPopupNotis.has(room.roomId)) {
         this.roomIdToPopupNotis.get(room.roomId).push(noti);
       } else {
         this.roomIdToPopupNotis.set(room.roomId, [noti]);
       }
+    } else {
+      this._playNotiSound();
     }
   }
 
@@ -341,7 +354,7 @@ class Notifications extends EventEmitter {
     const pusher = {
       append: false,
       app_display_name: "cinny",
-      app_id: "1:592847498257:web:7c3e7a8b949546ea4955b0",
+      app_id: "academy.meow.cinny.web",
       data: {
         brand: "meow inc.",
         format: "softkittypaws",
@@ -352,10 +365,8 @@ class Notifications extends EventEmitter {
       lang: "meow",
       profile_tag: "mrrp",
       pushkey: toki,
-      "org.matrix.msc3881.enabled?": true,
   }
     this.matrixClient.setPusher(pusher).catch(_error => console.log(_error));
-    return
     this.matrixClient.on('Room.timeline', (mEvent, room) => {
       if (mEvent.isRedaction()) this._deletePopupNoti(mEvent.event.redacts);
 
