@@ -65,7 +65,7 @@ class Notifications extends EventEmitter {
     });
     if ('serviceWorker' in navigator) {
         //registerSW()
-        navigator.serviceWorker.register(import.meta.env.MODE === 'production' ? '/firebase-sw.js' : '/dev-sw.js?dev-sw',     { type: import.meta.env.MODE === 'production' ? 'classic' : 'module' }).then(
+        navigator.serviceWorker.register(import.meta.env.MODE === 'production' ? 'firebase-sw.js' : '/dev-sw.js?dev-sw',     { type: import.meta.env.MODE === 'production' ? 'classic' : 'module' }).then(
             (sw) => getToken(messaging, {
               vapidKey: 'BM6uvdBPMiTPEBmqek0XzEIFuEr6vsmm4klO61_pVctOgnIhv1HbFYLNaQEg7RplS0N0Bu6kaQ4pogF32QpR4F0',
               serviceWorkerRegistration: sw
