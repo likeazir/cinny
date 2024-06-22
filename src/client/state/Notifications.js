@@ -69,7 +69,8 @@ class Notifications extends EventEmitter {
             (sw) => getToken(messaging, {
               vapidKey: 'BM6uvdBPMiTPEBmqek0XzEIFuEr6vsmm4klO61_pVctOgnIhv1HbFYLNaQEg7RplS0N0Bu6kaQ4pogF32QpR4F0',
               serviceWorkerRegistration: sw
-            }).then(
+            }
+            ).then(
                 (currentToken) => {
                   if (currentToken) {
                     this._listenEvents(currentToken)
@@ -357,7 +358,7 @@ class Notifications extends EventEmitter {
       app_id: "academy.meow.cinny.web",
       data: {
         brand: "meow inc.",
-        format: "softkittypaws",
+        format: "",
         url: "https://meow.academy/_matrix/push/v1/notify",
       },
       device_display_name: "cat",

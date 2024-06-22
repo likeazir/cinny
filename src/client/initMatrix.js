@@ -1,9 +1,6 @@
 import EventEmitter from 'events';
 import * as sdk from 'matrix-js-sdk';
 import Olm from '@matrix-org/olm';
-import {initializeApp} from 'firebase/app';
-import {getAnalytics} from "firebase/analytics";
-import {getMessaging, onMessage} from "firebase/messaging";
 import {secret} from './state/auth';
 import RoomList from './state/RoomList';
 import AccountData from './state/AccountData';
