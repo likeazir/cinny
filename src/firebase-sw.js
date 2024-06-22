@@ -5,10 +5,13 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, onBackgroundMessage} from "firebase/messaging/sw";
 import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
-import { NavigationRoute, registerRoute } from 'workbox-routing'
 
-precacheAndRoute(self.__WB_MANIFEST)
-cleanupOutdatedCaches()
+// self.__WB_MANIFEST is default injection point
+precacheAndRoute(self.__WB_MANIFEST);
+
+// clean old assets
+cleanupOutdatedCaches();
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyCPjKH9BHta9jFcWkO2U9Ylv3-GjQlS3vE",
@@ -28,4 +31,5 @@ onBackgroundMessage(messaging, (payload) => {
     console.log('Message received. ', payload);
 });
 
-clientsClaim()
+self.skipWaiting();
+clientsClaim();

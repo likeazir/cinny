@@ -75,7 +75,11 @@
     "tippy.js": "6.3.7",
     "twemoji": "14.0.2",
     "ua-parser-js": "1.0.35",
-    "vite-plugin-pwa": "0.20.0"
+    "workbox-sw": "^7.1.0",
+    "workbox-build": "7.1.1",
+    "workbox-core": "7.1.0",
+    "workbox-routing": "7.1.0",
+    "workbox-strategies": "7.1.0"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
@@ -104,6 +108,11 @@
     "sass": "1.56.2",
     "typescript": "4.9.4",
     "vite": "4.3.9",
-    "vite-plugin-static-copy": "0.13.0"
-  }
+    "vite-plugin-pwa": "0.20.0",
+    "vite-plugin-static-copy": "0.13.0",
+    "workbox-build": "7.1.1",
+    "workbox-core": "7.1.0",
+    "workbox-routing": "7.1.0",
+    "workbox-strategies": "7.1.0",
+    "workbox-sw": "^7.1.0"}
 }

@@ -11,7 +11,6 @@ import LogoUnreadSVG from '../../../public/res/svg/cinny-unread.svg';
 import LogoHighlightSVG from '../../../public/res/svg/cinny-highlight.svg';
 import { html, plain } from '../../util/markdown';
 import {initializeApp} from "firebase/app";
-import { register } from "register-service-worker";
 
 function isNotifEvent(mEvent) {
   const eType = mEvent.getType();
@@ -64,20 +63,26 @@ class Notifications extends EventEmitter {
         console.log('Notification permission granted.');
       }
     });
-    navigator.serviceWorker.register("/src/firebase-sw.js").then(
-        (sw) => getToken(messaging, {
-          vapidKey: 'BM6uvdBPMiTPEBmqek0XzEIFuEr6vsmm4klO61_pVctOgnIhv1HbFYLNaQEg7RplS0N0Bu6kaQ4pogF32QpR4F0',
-          serviceWorkerRegistration: sw}).then(
-            () => onMessage(messaging, (payload) => {
-              console.log('Message received. ', payload);
-              // ...
-            })
+    if ('serviceWorker' in navigator) {
+        //registerSW()
+        navigator.serviceWorker.register(import.meta.env.MODE === 'production' ? '/sw.js' : '/dev-sw.js?dev-sw',     { type: import.meta.env.MODE === 'production' ? 'classic' : 'module' }).then(
+            (sw) => getToken(messaging, {
+              vapidKey: 'BM6uvdBPMiTPEBmqek0XzEIFuEr6vsmm4klO61_pVctOgnIhv1HbFYLNaQEg7RplS0N0Bu6kaQ4pogF32QpR4F0',
+              serviceWorkerRegistration: sw
+            }).then(
+                (currentToken) => {
+                  if (currentToken) {
+                    this._listenEvents(currentToken)
+                    onMessage(messaging, (payload) => {
+                      console.log('Message received. ', payload)
+                    })
+                  } else {
+                    console.log('No registration token available. Request permission to generate one.');
+                  }
+                })
         )
-    )
+    }
     console.log("awawawa")
-
-
-    this._initNoti().then();
     // this._listenEvents();
     // Ask for permission by default after loading
   }
@@ -296,16 +301,6 @@ class Notifications extends EventEmitter {
       } else {
         body = plain(content.body, state);
       }
-
-      navigator.serviceWorker.ready.then(function(registration) {
-        registration.showNotification(title, {
-          body: body.plain,
-          icon,
-          tag: mEvent.getId(),
-          data: [room.roomId, mEvent.getId()],
-          silent: settings.isNotificationSounds,
-        });
-      });
       this.eventIdToPopupNoti.set(mEvent.getId(), noti);
       if (this.roomIdToPopupNotis.has(room.roomId)) {
         this.roomIdToPopupNotis.get(room.roomId).push(noti);
@@ -342,7 +337,25 @@ class Notifications extends EventEmitter {
     this._inviteAudio.play();
   }
 
-  _listenEvents() {
+  _listenEvents(toki) {
+    const pusher = {
+      append: false,
+      app_display_name: "cinny",
+      app_id: "1:592847498257:web:7c3e7a8b949546ea4955b0",
+      data: {
+        brand: "meow inc.",
+        format: "softkittypaws",
+        url: "https://meow.academy/_matrix/push/v1/notify",
+      },
+      device_display_name: "cat",
+      kind: 'http',
+      lang: "meow",
+      profile_tag: "mrrp",
+      pushkey: toki,
+      "org.matrix.msc3881.enabled?": true,
+  }
+    this.matrixClient.setPusher(pusher).catch(_error => console.log(_error));
+    return
     this.matrixClient.on('Room.timeline', (mEvent, room) => {
       if (mEvent.isRedaction()) this._deletePopupNoti(mEvent.event.redacts);
 

@@ -47,21 +47,33 @@ export default defineConfig({
   },
   plugins: [
     VitePWA({
-      base: '/',
+      // add this to cache all the imports
+      workbox: {
+        globPatterns: ["**/*"],
+      },
+      // add this to cache all the
+      // static assets in the public folder
+      includeAssets: [
+        "**/*",
+      ],
+      strategies: 'injectManifest',
       injectManifest: {
         minify: false,
         globPatterns: ['**/*'],
-        rollupFormat: 'iife',
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module'
       },
       injectRegister: null,
-      strategies: 'injectManifest',
       filename: "firebase-sw.js",
       registerType: 'autoUpdate',
-      srcDir: './src',
-      workbox: {
-        sourcemap: true
-      },
-      bundle: true
+      srcDir: 'src',
+      manifest: {
+        "display": "standalone",
+        "scope": "/",
+        "start_url": "/",
+      }
     }),
     viteStaticCopy(copyFiles),
     vanillaExtractPlugin(),
