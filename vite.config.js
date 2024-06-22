@@ -63,7 +63,7 @@ export default defineConfig({
       },
       devOptions: {
         enabled: true,
-        type: 'module'
+        type: 'classic'
       },
       injectRegister: null,
       filename: "firebase-sw.js",
