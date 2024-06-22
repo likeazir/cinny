@@ -3,15 +3,7 @@
 // are not available in the service worker
 import { initializeApp } from "firebase/app";
 import { getMessaging, onBackgroundMessage} from "firebase/messaging/sw";
-import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
-
-// self.__WB_MANIFEST is default injection point
-precacheAndRoute(self.__WB_MANIFEST);
-
-// clean old assets
-cleanupOutdatedCaches();
-
 
 const firebaseConfig = {
     apiKey: "AIzaSyCPjKH9BHta9jFcWkO2U9Ylv3-GjQlS3vE",
