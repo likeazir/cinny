@@ -48,14 +48,6 @@ export default defineConfig({
   plugins: [
     VitePWA({
       // add this to cache all the imports
-      workbox: {
-        globPatterns: ["**/*"],
-      },
-      // add this to cache all the
-      // static assets in the public folder
-      includeAssets: [
-        "**/*",
-      ],
       strategies: 'injectManifest',
       injectManifest: {
         minify: false,
