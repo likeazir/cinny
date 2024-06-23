@@ -436,7 +436,6 @@ class Notifications extends EventEmitter {
       if (mEvent.getType() !== 'm.receipt' || room.isSpaceRoom()) return;
       const content = mEvent.getContent();
       const userId = this.matrixClient.getUserId();
-
       Object.keys(content).forEach((eventId) => {
         Object.entries(content[eventId]).forEach(([receiptType, receipt]) => {
           if (!cons.supportReceiptTypes.includes(receiptType)) return;
@@ -445,8 +444,8 @@ class Notifications extends EventEmitter {
             this._deletePopupRoomNotis(room.roomId);
           }
         });
-      });
     });
+      });
 
     this.matrixClient.on('Room.myMembership', (room, membership) => {
       if (membership === 'leave' && this.hasNoti(room.roomId)) {

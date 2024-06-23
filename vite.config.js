@@ -58,15 +58,35 @@ export default defineConfig({
         enabled: true,
         type: 'classic'
       },
+      manifest: {
+        theme_color: '#000000',
+        display: "standalone",
+        shortname: "meow",
+        name: "meow meow meow",
+        start_url: "./",
+        icons: [
+          {
+            src: 'pwa-192x192.png', // <== don't add slash, for testing
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png', // <== don't remove slash, for testing
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png', // <== don't add slash, for testing
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: ['any', 'maskable'], // testing new type declaration
+          },
+        ],
+      },
       injectRegister: null,
       filename: "firebase-sw.js",
       registerType: 'autoUpdate',
       srcDir: 'src',
-      manifest: {
-        "display": "standalone",
-        "scope": "/",
-        "start_url": "/",
-      }
     }),
     viteStaticCopy(copyFiles),
     vanillaExtractPlugin(),
