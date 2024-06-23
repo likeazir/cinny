@@ -27,7 +27,7 @@ const messaging = getMessaging(app);
 
 console.log('uwu <3');
 onBackgroundMessage(messaging, (payload) => {
-    if (payload.content_algorithm) {
+    if (payload.data.content_algorithm) {
         const notificationTitle = payload.data.sender;
         const notificationOptions = {
             body: "𝘦𝘯𝘤𝘳𝘺𝘱𝘵𝘦𝘥 𝘮𝘦𝘴𝘴𝘢𝘨𝘦",
@@ -35,7 +35,7 @@ onBackgroundMessage(messaging, (payload) => {
         self.registration.showNotification(notificationTitle,
             notificationOptions);
     }
-    if (payload.content_msgtype === "m.text") {
+    if (payload.data.content_msgtype === "m.text") {
         const notificationTitle = payload.data.room_name;
         const notificationOptions = {
             body: payload.data.content_body,
