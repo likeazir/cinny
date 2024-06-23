@@ -60,7 +60,6 @@ onBackgroundMessage(messaging, (payload) => {
         const notificationTitle = payload.data.room_name;
         const notificationOptions = {
             body:"𝘦𝘯𝘤𝘳𝘺𝘱𝘵𝘦𝘥 𝘮𝘦𝘴𝘴𝘢𝘨𝘦",
-            renotify: true,
         };
         self.registration.showNotification(notificationTitle,
             notificationOptions);
@@ -69,7 +68,6 @@ onBackgroundMessage(messaging, (payload) => {
         const notificationTitle = payload.data.room_name;
         const notificationOptions = {
             body: payload.data.sender_display_name + ": " + payload.data.content_body,
-            renotify: true,
         };
         self.registration.showNotification(notificationTitle,
             notificationOptions);
