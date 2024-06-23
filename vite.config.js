@@ -50,7 +50,8 @@ export default defineConfig({
       // add this to cache all the imports
       strategies: 'injectManifest',
       injectManifest: {
-        minify: false,
+        minify: true,
+        maximumFileSizeToCacheInBytes: 10000000,
         globPatterns: ['**/*'],
       },
       devOptions: {
