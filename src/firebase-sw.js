@@ -12,6 +12,32 @@ precacheAndRoute(self.__WB_MANIFEST);
 // clean old assets
 cleanupOutdatedCaches();
 
+const urlToOpen = new URL(self.location.origin).href;
+const promiseChain = clients
+    .matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+    })
+    .then((windowClients) => {
+        let matchingClient = null;
+
+        for (let i = 0; i < windowClients.length; i++) {
+            const windowClient = windowClients[i];
+            if (windowClient.url === urlToOpen) {
+                matchingClient = windowClient;
+                break;
+            }
+        }
+
+        if (matchingClient) {
+            return matchingClient.focus();
+        } else {
+            return clients.openWindow(urlToOpen);
+        }
+    });
+event.waitUntil(promiseChain);
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyCPjKH9BHta9jFcWkO2U9Ylv3-GjQlS3vE",
     authDomain: "cinny-a29d3.firebaseapp.com",
@@ -45,6 +71,8 @@ onBackgroundMessage(messaging, (payload) => {
     }
     console.log('Message received. ', payload);
 });
+
+
 
 self.skipWaiting();
 clientsClaim();

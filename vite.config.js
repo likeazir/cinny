@@ -61,6 +61,7 @@ export default defineConfig({
       manifest: {
         theme_color: '#000000',
         display: "standalone",
+        gcm_sender_id: "103953800507",
         shortname: "meow",
         name: "meow meow meow",
         start_url: "./",
