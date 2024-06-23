@@ -59,8 +59,7 @@ onBackgroundMessage(messaging, (payload) => {
     if (payload.data.content_algorithm) {
         const notificationTitle = payload.data.room_name;
         const notificationOptions = {
-            tag: payload.data.room_id,
-            body: "𝘦𝘯𝘤𝘳𝘺𝘱𝘵𝘦𝘥 𝘮𝘦𝘴𝘴𝘢𝘨𝘦",
+            body:"𝘦𝘯𝘤𝘳𝘺𝘱𝘵𝘦𝘥 𝘮𝘦𝘴𝘴𝘢𝘨𝘦",
             renotify: true,
         };
         self.registration.showNotification(notificationTitle,
@@ -69,8 +68,7 @@ onBackgroundMessage(messaging, (payload) => {
     if (payload.data.content_msgtype === "m.text") {
         const notificationTitle = payload.data.room_name;
         const notificationOptions = {
-            tag: payload.data.room_id,
-            body: payload.data.content_body,
+            body: payload.data.sender_display_name + ": " + payload.data.content_body,
             renotify: true,
         };
         self.registration.showNotification(notificationTitle,
