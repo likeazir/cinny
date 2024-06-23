@@ -1,13 +1,7 @@
 {
-  "defaultHomeserver": 3,
+  "defaultHomeserver": 0,
   "homeserverList": [
-    "0wnz.at",
-    "converser.eu",
-    "envs.net",
-    "matrix.org",
-    "monero.social",
-    "mozilla.org",
-    "xmr.se"
+    "meow.academy"
   ],
   "allowCustomHomeservers": true
 }
