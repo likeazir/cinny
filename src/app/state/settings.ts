@@ -10,6 +10,7 @@ export interface Settings {
   isMarkdown: boolean;
   editorToolbar: boolean;
   twitterEmoji: boolean;
+  pageZoom: number;
 
   isPeopleDrawer: boolean;
   memberSortFilterIndex: number;
@@ -33,6 +34,7 @@ const defaultSettings: Settings = {
   isMarkdown: true,
   editorToolbar: false,
   twitterEmoji: false,
+  pageZoom: 100,
 
   isPeopleDrawer: true,
   memberSortFilterIndex: 0,
@@ -64,7 +66,7 @@ export const setSettings = (settings: Settings) => {
 };
 
 const baseSettings = atom<Settings>(getSettings());
-export const settingsAtom = atom<Settings, Settings>(
+export const settingsAtom = atom<Settings, [Settings], undefined>(
   (get) => get(baseSettings),
   (get, set, update) => {
     set(baseSettings, update);

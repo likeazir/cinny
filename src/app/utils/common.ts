@@ -44,6 +44,17 @@ export const fulfilledPromiseSettledResult = <T>(prs: PromiseSettledResult<T>[])
     return values;
   }, []);
 
+export const promiseFulfilledResult = <T>(
+  settledResult: PromiseSettledResult<T>
+): T | undefined => {
+  if (settledResult.status === 'fulfilled') return settledResult.value;
+  return undefined;
+};
+export const promiseRejectedResult = <T>(settledResult: PromiseSettledResult<T>): any => {
+  if (settledResult.status === 'rejected') return settledResult.reason;
+  return undefined;
+};
+
 export const binarySearch = <T>(items: T[], match: (item: T) => -1 | 0 | 1): T | undefined => {
   const search = (start: number, end: number): T | undefined => {
     if (start > end) return undefined;
@@ -76,4 +87,28 @@ export const parseGeoUri = (location: string) => {
     latitude,
     longitude,
   };
+};
+
+const START_SLASHES_REG = /^\/+/g;
+const END_SLASHES_REG = /\/+$/g;
+export const trimLeadingSlash = (str: string): string => str.replace(START_SLASHES_REG, '');
+export const trimTrailingSlash = (str: string): string => str.replace(END_SLASHES_REG, '');
+
+export const trimSlash = (str: string): string => trimLeadingSlash(trimTrailingSlash(str));
+
+export const nameInitials = (str: string | undefined | null, len = 1): string => {
+  if (!str) return '�';
+  return [...str].slice(0, len).join('') || '�';
+};
+
+export const randomStr = (len = 12): string => {
+  let str = '';
+  const minCode = 'A'.charCodeAt(0);
+  const maxCode = 'Z'.charCodeAt(0);
+
+  for (let i = 0; i < len; i += 1) {
+    const code = Math.floor(Math.random() * (maxCode - minCode + 1) + minCode);
+    str += String.fromCharCode(code);
+  }
+  return str;
 };
