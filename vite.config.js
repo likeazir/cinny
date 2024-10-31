@@ -69,7 +69,7 @@ export default defineConfig({
       strategies: 'injectManifest',
       injectManifest: {
         minify: true,
-        maximumFileSizeToCacheInBytes: 10000000,
+        maximumFileSizeToCacheInBytes: 100000000,
         globPatterns: ['**/*'],
       },
       devOptions: {
